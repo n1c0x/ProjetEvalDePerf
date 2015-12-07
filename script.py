@@ -131,7 +131,7 @@ while compteur_flux < nb_flux:
 	segmentSize = 0
 	compteur_volume = 0
 	for compteur_volume in liste_total_volume:
-		compteur_volume = compteur_volume.astype(int)
+		compteur_volume = compteur_volume.astype(int)*1000000*8
 		iterateur_sous_flux = 0
 		while somme_volume < compteur_volume :
 			taille_segment_tcp = np.random.zipf(a, 1)
@@ -143,8 +143,8 @@ while compteur_flux < nb_flux:
 			script.write('$ns attach-agent $n('+str(noeuds_traf_dst[compteur_flux])+') $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
 			script.write('$ns connect $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') $null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
 			script.write('$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') set packetSize_ 1500\n')
-			script.write('$ns at '+str(rand_duree())+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') send size '+str(segmentSize)+'"\n')
-			script.write('$ns at '+str(4.5)+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') stop"\n\n')
+			script.write('$ns at '+str(rand_duree())+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') send size '+str(segmentSize)+'"\n\n')
+			#script.write('$ns at '+str(4.5)+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') stop"\n\n')
 			somme_volume = somme_volume + taille_segment_tcp[0]
 			iterateur_sous_flux += 1
 	somme_volume = 0
