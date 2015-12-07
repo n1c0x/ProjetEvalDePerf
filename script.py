@@ -1,3 +1,12 @@
+# mettre TCP en flux (et pas UDP)
+# tcp send size
+# $tcp(0) set packetSize_ 1500
+# tcp send size (taille du flux tcp -> zipf)
+# nom du flux: 0_1_1
+# 0: source
+# 1: destination
+# 1: no du fragment de flux
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import numpy as np
@@ -125,6 +134,7 @@ while i < taille_traf:
 	script.write('set udp('+str(i)+') [new Agent/UDP]\n')
 	script.write('$ns attach-agent $n('+str(noeuds_traf_dst[i])+') $udp('+str(i)+')\n')
 	script.write('$ns connect $udp('+str(i)+') $null('+str(i)+')\n\n')
+	# Envoi de données à un temps donné ns. En octets. at 0 "$tcp send 1000"
 	i += 1
 
 i = 0
