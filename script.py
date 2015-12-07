@@ -1,12 +1,3 @@
-# mettre TCP en flux (et pas UDP)
-# tcp send size
-# $tcp(0) set packetSize_ 1500
-# tcp send size (taille du flux tcp -> zipf)
-# nom du flux: 0_1_1
-# 0: source
-# 1: destination
-# 1: no du fragment de flux
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import numpy as np
@@ -17,10 +8,9 @@ from scipy.stats import zipf
 def rand_duree() :
 	return np.random.random()*4
 
-#volume = 500000
+#liste_total_volume = 500000
 a=1.2
 np.set_printoptions(precision=3)
-somme = 0
 i = 0
 
 topologie = open("topo.top", "r")
@@ -58,12 +48,12 @@ noeuds_tries_orig = []
 noeuds_extr = []
 capacite = []
 delai = []
-nb_liens = 26
+nb_noeuds = 26
 
 noeuds_traf_src = []
 noeuds_traf_dst = []
-volume = []
-taille_traf = 0
+liste_total_volume = []
+nb_flux = 0
 
 for ligne in lignes_topo:
 	contenu = np.array(ligne.split())
@@ -76,13 +66,10 @@ for ligne in lignes_trafic:
 	contenu = np.array(ligne.split())
 	noeuds_traf_src.append(contenu[0])
 	noeuds_traf_dst.append(contenu[1])
-	volume.append(contenu[2])
-	taille_traf += 1
+	liste_total_volume.append(contenu[2])
+	nb_flux += 1
 	
-
-
 # Création des liens
-
 noeuds_tries_orig_uniques = list(set(noeuds_tries_orig))
 noeuds_tries_orig_uniques.sort(key=int)
 
@@ -90,9 +77,9 @@ noeuds_tries_orig_uniques.sort(key=int)
 noeuds_tries_orig_uniques = [int(i) for i in noeuds_tries_orig_uniques]
 
 # initialisation de la taille du tableau
-taille = len(noeuds_tries_orig_uniques)
+# nb_liens = len(noeuds_tries_orig_uniques)
 
-while i < nb_liens:
+while i < nb_noeuds:
 	script.write('set n(')
 	#script.write(str(noeuds_tries_orig_uniques[i]))
 	script.write(str(i))
@@ -101,15 +88,15 @@ while i < nb_liens:
 		
 	i += 1
 
-#taille = 0
+#nb_liens = 0
 noeuds_tries_orig = [int(i) for i in noeuds_tries_orig]
-taille = len(noeuds_tries_orig)
+nb_liens = len(noeuds_tries_orig)
 
 # Ligne blanche
 script.write('\n\n')
 
 i = 0
-while i < taille:
+while i < nb_liens:
 	script.write('$ns duplex-link $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') '+str(capacite[i])+'Mb '+str(delai[i])+'ms DropTail\n')
 	script.write('set file'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+' [open traces/queue'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+'.tr w]\n')
 	script.write('$ns trace-queue $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') $file'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+'\n')
@@ -120,73 +107,85 @@ while i < taille:
 '''
 noeuds_traf_src
 noeuds_traf_dst
-volume
-taille_traf
+liste_total_volume
+nb_flux
 '''
 
 # Ligne blanche
 script.write("\n")
 
 i = 0
-while i < taille_traf:
-	script.write('set null('+str(i)+') [new Agent/Null]\n')
-	script.write('$ns attach-agent $n('+str(noeuds_traf_src[i])+') $null('+str(i)+')\n')
-	script.write('set udp('+str(i)+') [new Agent/UDP]\n')
-	script.write('$ns attach-agent $n('+str(noeuds_traf_dst[i])+') $udp('+str(i)+')\n')
-	script.write('$ns connect $udp('+str(i)+') $null('+str(i)+')\n\n')
+while i < nb_flux:
+	# script.write('set null('+str(noeuds_traf_src[i])+'_'+str(noeuds_traf_dst[i])+') [new Agent/Null]\n')
+	# script.write('$ns attach-agent $n('+str(noeuds_traf_src[i])+') $null('+str(noeuds_traf_src[i])+'_'+str(noeuds_traf_dst[i])+')\n')
+	# script.write('set tcp('+str(noeuds_traf_src[i])+'_'+str(noeuds_traf_dst[i])+') [new Agent/UDP]\n')
+	# script.write('$ns attach-agent $n('+str(noeuds_traf_dst[i])+') $tcp('+str(noeuds_traf_src[i])+'_'+str(noeuds_traf_dst[i])+')\n')
+	# script.write('$ns connect $tcp('+str(noeuds_traf_src[i])+'_'+str(noeuds_traf_dst[i])+') $null('+str(noeuds_traf_src[i])+'_'+str(noeuds_traf_dst[i])+')\n')
+	# script.write('$tcp('+str(noeuds_traf_src[i])+'_'+str(noeuds_traf_dst[i])+') set packetSize_ 1500\n\n')
 	# Envoi de données à un temps donné ns. En octets. at 0 "$tcp send 1000"
 	i += 1
 
-i = 0
-while i < taille_traf:
-	packetSize = 0
-	for j in volume:
-		j = j.astype(int)
-		while somme < j :
-			s = np.random.zipf(a, 1)
-			packetSize = s[0]
-			script.write('$udp('+str(i)+') set packetSize_ '+str(packetSize)+'\n')
-			script.write('$ns at '+str(rand_duree())+' "$udp('+str(i)+') start"\n\n')
-			somme = somme + s[0]
-	somme = 0
-	i += 1
+compteur_flux = 0
+somme_volume = 0
+while compteur_flux < nb_flux:
+	segmentSize = 0
+	compteur_volume = 0
+	for compteur_volume in liste_total_volume:
+		compteur_volume = compteur_volume.astype(int)
+		iterateur_sous_flux = 0
+		while somme_volume < compteur_volume :
+			taille_segment_tcp = np.random.zipf(a, 1)
+			segmentSize = taille_segment_tcp[0]
 
-while i > 0:
-	script.write('$ns at '+str(4.5)+' "$udp('+str(i-1)+') stop"\n')
-	i -= 1
+			script.write('set null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/Null]\n')
+			script.write('$ns attach-agent $n('+str(noeuds_traf_src[compteur_flux])+') $null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
+			script.write('set tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/UDP]\n')
+			script.write('$ns attach-agent $n('+str(noeuds_traf_dst[compteur_flux])+') $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
+			script.write('$ns connect $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') $null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
+			script.write('$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') set packetSize_ 1500\n')
+			script.write('$ns at '+str(rand_duree())+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') send size '+str(segmentSize)+'"\n')
+			script.write('$ns at '+str(4.5)+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') stop"\n\n')
+			somme_volume = somme_volume + taille_segment_tcp[0]
+			iterateur_sous_flux += 1
+	somme_volume = 0
+	compteur_flux += 1
+
+# while i > 0:
+# 	script.write('$ns at '+str(4.5)+' "$udp('+str(i-1)+') stop"\n')
+# 	i -= 1
 
 script.write('$ns at 5.0 "finish"\n\n')
 script.write('# Run simulation\n')
-script.write('$ns run\n')
+script.write('$ns run')
 
 '''
 i = 0
-for i in volume:
+for i in liste_total_volume:
 	i = i.astype(int)
-	while somme < i :
+	while somme_volume < i :
 		# s est un tableau
 		s = np.random.zipf(a, 1)
 		#print(s)
-		somme = somme + s[0]
+		somme_volume = somme_volume + s[0]
 		#i = i+1
-	#print("{} : {}\n\n\n".format("Somme", somme))
+	#print("{} : {}\n\n\n".format("somme_volume", somme_volume))
 
 
-somme = 0
-for j in volume:
+somme_volume = 0
+for j in liste_total_volume:
 	j = j.astype(int)
-	while somme < j :
+	while somme_volume < j :
 		# s est un tableau
 		s = np.random.zipf(1.2, 1)
 		print(s)
-		somme = somme + s[0]
+		somme_volume = somme_volume + s[0]
 '''
 
 
 
-#print("{}: {}".format("Nombre de flux",taille_traf))
-#print("{}: {} {}".format("Volume", volume, "Go"))
-#print("{}: {}".format("Somme", somme))
+#print("{}: {}".format("Nombre de flux",nb_flux))
+#print("{}: {} {}".format("liste_total_volume", liste_total_volume, "Go"))
+#print("{}: {}".format("somme_volume", somme_volume))
 
 
 topologie.close()
