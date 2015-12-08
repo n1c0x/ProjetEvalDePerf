@@ -10,3 +10,6 @@
 # Compressed folders
 *.zip
 *.tar.gz
+
+# fichier tcl trop gros
+script.tcl

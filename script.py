@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import scipy.special as sps
 from scipy.stats import zipf
 
+
 def rand_duree() :
 	return np.random.random()*4
 
@@ -30,10 +31,10 @@ $ns rtproto DV
 #$ns namtrace-all $nf
 
 proc finish {} {
-	#global ns nf
+	#global ns trace_all
 	#$ns flush-trace
 	#Close the NAM trace file
-	#close $nf
+	#close $trace_all
 	#Execute NAM on the trace file
 	#exec nam -a out2.nam &
 	exit 0
@@ -131,20 +132,25 @@ while compteur_flux < nb_flux:
 	segmentSize = 0
 	compteur_volume = 0
 	for compteur_volume in liste_total_volume:
-		compteur_volume = compteur_volume.astype(int)*1000000*8
+		#compteur_volume = compteur_volume.astype(int)*1000000*8
+		compteur_volume = compteur_volume.astype(int)
 		iterateur_sous_flux = 0
 		while somme_volume < compteur_volume :
 			taille_segment_tcp = np.random.zipf(a, 1)
 			segmentSize = taille_segment_tcp[0]
 
-			script.write('set null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/Null]\n')
+			script.write('set null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/TCPSink]\n')
 			script.write('$ns attach-agent $n('+str(noeuds_traf_src[compteur_flux])+') $null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
-			script.write('set tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/UDP]\n')
+			script.write('set tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/TCP]\n')
 			script.write('$ns attach-agent $n('+str(noeuds_traf_dst[compteur_flux])+') $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
 			script.write('$ns connect $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') $null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
 			script.write('$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') set packetSize_ 1500\n')
-			script.write('$ns at '+str(rand_duree())+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') send size '+str(segmentSize)+'"\n\n')
-			#script.write('$ns at '+str(4.5)+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') stop"\n\n')
+
+			script.write('set ftp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Application/FTP]\n')
+			script.write('$ftp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') attach-agent $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
+			script.write('$ns at '+str(rand_duree())+' "$ftp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') start"\n')
+			#script.write('$ns at '+str(rand_duree())+' "$tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') send size '+str(segmentSize)+'"\n')
+			script.write('$ns at '+str(4.5)+' "$ftp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') stop"\n\n')
 			somme_volume = somme_volume + taille_segment_tcp[0]
 			iterateur_sous_flux += 1
 	somme_volume = 0
