@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy.special as sps
 from scipy.stats import zipf
 
