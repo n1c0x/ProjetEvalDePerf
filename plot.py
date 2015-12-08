@@ -2,8 +2,19 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-trace = open("./traces_small/queue017.tr", "r")
+#files = {}
+
+#for filename in os.listdir(os.getcwd()+'/traces_small/') :
+	#files.append(filename)
+	#trace = open('traces_small/'+filename, "r")
+	#files["trace" + str(filename)] = trace.readlines()
+
+#print(files)
+
+#for filename in files : 
+trace = open('traces_small/queue017.tr', "r")
 lignes_traces = trace.readlines()
 
 action = []
@@ -38,7 +49,7 @@ for ligne in lignes_traces :
 # definition de l'échelle (log ou pas)
 # plt.yscale('log')
 
-plt.plot(temps, id_paquet)
+plt.plot(temps, seq)
 plt.ylabel('Test')
 plt.xlabel('Temps')
 plt.show()
