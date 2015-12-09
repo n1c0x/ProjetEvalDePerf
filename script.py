@@ -131,8 +131,8 @@ while compteur_flux < nb_flux:
 	segmentSize = 0
 	compteur_volume = 0
 	for compteur_volume in liste_total_volume:
-		#compteur_volume = compteur_volume.astype(int)*1000000*8
-		compteur_volume = compteur_volume.astype(int)
+		compteur_volume = compteur_volume.astype(int)*1000000*8
+		#compteur_volume = compteur_volume.astype(int)
 		iterateur_sous_flux = 0
 		while somme_volume < compteur_volume :
 			taille_segment_tcp = np.random.zipf(a, 1)
