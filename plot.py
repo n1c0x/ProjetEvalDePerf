@@ -4,8 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-dossier_dest = 'traces_Mb'
+dossier_dest = 'traces'
 liste_fichiers = os.listdir(dossier_dest)
+
+noeud_max_pertes = []
 
 for filename in liste_fichiers :
 
@@ -75,6 +77,8 @@ for filename in liste_fichiers :
 	print('\n')
 
 	pourcent_pertes = (len(nb_paquets_perdus)/nb_paquets)*100
+	noeud_max_pertes.append(pourcent_pertes)
+
 	pourcent_recus = (len(nb_paquets_recus)/nb_paquets)*100
 	pourcent_ajoutes = (len(nb_paquets_ajoutes)/nb_paquets)*100
 	pourcent_enleves = (len(nb_paquets_enleves)/nb_paquets)*100
@@ -97,6 +101,8 @@ for filename in liste_fichiers :
 	plt.legend(patches, labels, loc="best")
 	plt.axis('equal')
 
-	plt.savefig(dossier_dest+'/images'+filename+'.png')
+	plt.savefig(dossier_dest+'/'+filename+'.png')
 	plt.close()
 	#plt.show()
+
+#print(max(noeud_max_pertes.__round__(2)))

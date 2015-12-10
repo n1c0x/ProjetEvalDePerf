@@ -1,0 +1,5 @@
+Exercice 2:
+J’ai utilisé la fonction de répartition de Zipf, grâce à la fonction np.random.zipf(a, 1) de numpy, une bibliothèque Python spécialisée dans le calcul mathématique. 
+
+Cette fonction prend deux paramètres: 
+	a: le paramètre de distribution, supérieur à 1. Pour ma part, je l'ai fixé à 1,2 afin d'obtenir une distribution correcte. En effet, si a est plus petit, trop de grands nombres sont tirés, et le cas est inversé si a est trop grand.

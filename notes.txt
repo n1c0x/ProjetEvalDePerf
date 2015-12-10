@@ -1,0 +1,2 @@
+Mb, not 1024	1 min	NOK
+Mb, 1024		4 min 	OK pour pertes
