@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-dossier_dest = 'traces'
+dossier_dest = '/mnt/Donnees300Go/projet/traces_Gb'
 liste_fichiers = os.listdir(dossier_dest)
 
 noeud_max_pertes = []

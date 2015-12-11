@@ -14,7 +14,7 @@ Choix réseau:
 - Flux:
 	- Dû à l'utilisation de la répartition de Zipf, des noeuds TCP (et donc également des noeuds NULL) sont indispensables. Les segments TCP ont une taille fixe de 1500 octets, limite dûe à la taille d'une trame ethernet. Une application FTP est configurée par dessus le noeud TCP afin d'avoir la possibilité de fixer précisément la taille de paquet et son heure d'envoi. 
 	- La taille du paquet (en bits) correspond à la valeur tirée par la fonction de répartition de Zipf et est additionnée à la précédente et ce jusqu'à atteindre la valeur correspondante au volume donné dans le fichier traff.traf. Selon l'encadrant, le volume est donné en Mo. Il faut donc multiplier cette valeur par 1024*1024, ainsi que par 8, parce que la taille du paquet est indiquée en bits, et la valeur de volume en octets.
-	- L'heure d'envoi du paquet correspond à une valeur aléatoire tirée entre 0 et 4. La simulation durant 5 minutes, le paquet pourra donc être envoyé jusqu'à 4 minutes après le lancement de celle-ci afin de lui donner le temps de parcourir le réseau.
+	- L'heure d'envoi du paquet correspond à une valeur aléatoire tirée entre 0 et 240. La simulation durant 5 minutes (300 secondes), le paquet pourra donc être envoyé jusqu'à 4 minutes après le lancement de celle-ci afin de lui donner le temps de parcourir le réseau.
 	- La numérotation des variables est réalisée comme suit:
 		$tcp(0_2_12)
 		0 	=> noeud source
@@ -22,4 +22,8 @@ Choix réseau:
 		12 	=> itérateur du sous flux
 
 Question 2
-J'ai réalisé un graphe en camembert afin de visualiser le pourcentage de pertes pour un lien donné. (0-19, 5-22, 18-22) On peut voir sur les grapĥes suivants que très peu de pertes sont observées (moins de 2%). Le réseau est donc sur-dimensionné par rapport au volume de données qui y transitent.
+J'ai réalisé un graphe en camembert afin de visualiser le pourcentage de pertes pour un lien donné. (0-19, 5-22, 18-22) On peut voir sur les graphes suivants que très peu de pertes sont observées (moins de 2%). Le réseau est donc surdimensionné par rapport au volume de données qui y transitent.
+
+
+Question 3
+Le réseau étant sur-dimensionné, on peut le mettre à l'épreuve en diminuant la capacité des liens ou en augmentant le volume de données envoyées. Une autre manière de mettre le réseau à l'épreuve serait de désactiver des noeuds afin de simuler des pannes. Les autres noeuds seront donc plus sollicités et mécaniquement, leur charge augmentera.
