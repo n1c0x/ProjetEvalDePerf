@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-dossier_dest = '/mnt/Donnees300Go/projet/traces_Gb'
+dossier_dest = 'traces'
 liste_fichiers = os.listdir(dossier_dest)
 
 noeud_max_pertes = []
@@ -49,24 +49,8 @@ for filename in liste_fichiers :
 			nb_paquets_enleves.append(contenu[1])
 		nb_paquets += 1
 
-		'''
-		action.append(contenu[0])
-		temps.append(contenu[1])
-		noeud_src.append(contenu[2])
-		noeud_dst.append(contenu[3])
-		type_paquet.append(contenu[4])
-		taille_paquet.append(contenu[5])
-		flags.append(contenu[6])
-		id_flux.append(contenu[7])
-		addr_noeud_src.append(contenu[8])
-		addr_noeud_dst.append(contenu[9])
-		seq.append(contenu[10])
-		id_paquet.append(contenu[11])
-		'''
-
 	src = filename.split('-')[0]
 	dst = filename.split('-')[1]
-	#print(filename.split('-'))
 	print('Du noeud '+src+' vers '+dst)
 	print(str(nb_paquets)+' Paquets traités')
 	print('----------------------------')
@@ -82,20 +66,12 @@ for filename in liste_fichiers :
 	pourcent_recus = (len(nb_paquets_recus)/nb_paquets)*100
 	pourcent_ajoutes = (len(nb_paquets_ajoutes)/nb_paquets)*100
 	pourcent_enleves = (len(nb_paquets_enleves)/nb_paquets)*100
-	#print(str(pourcent_pertes.__round__(2))+'%  paquets perdus')
-
 	
-	#plt.plot(temps, seq)
-	#plt.ylabel('Test')
-	#plt.xlabel('Temps')
 	plt.figure()
 	
 	labels = [r'Paquets perdus '+str(pourcent_pertes.__round__(2))+'%',r'Paquets reçus '+str(pourcent_recus.__round__(2))+'%',r'Paquets ajoutés '+str(pourcent_ajoutes.__round__(2))+'%',r'Paquets enlevés '+str(pourcent_enleves.__round__(2))+'%']
-	#values = [pourcent_pertes,pourcent_recus,pourcent_ajoutes,pourcent_enleves]
 	sizes = [pourcent_pertes,pourcent_recus,pourcent_ajoutes,pourcent_enleves]
 	colors = ['yellowgreen', 'gold', 'lightskyblue', 'lightcoral']
-
-	#plt.pie(values, labels=labels, autopct='%.2f')
 
 	patches, texts = plt.pie(sizes, colors=colors, startangle=90)
 	plt.legend(patches, labels, loc="best")
@@ -103,6 +79,3 @@ for filename in liste_fichiers :
 
 	plt.savefig(dossier_dest+'/'+filename+'.png')
 	plt.close()
-	#plt.show()
-
-#print(max(noeud_max_pertes.__round__(2)))
