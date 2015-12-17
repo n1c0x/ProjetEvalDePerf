@@ -80,7 +80,7 @@ script.write('\n\n')
 
 i = 0
 while i < nb_liens:
-	script.write('$ns duplex-link $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') '+str(capacite[i])+'Mb '+str(delai[i])+'ms DropTail\n')
+	script.write('$ns duplex-link $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') '+str(capacite[i])+'Mb '+str(delai[i])+'ms DRR\n')
 	script.write('set file'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+' [open traces/'+str(noeuds_tries_orig[i])+'-'+str(noeuds_extr[i])+'.tr w]\n')
 	script.write('$ns trace-queue $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') $file'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+'\n')
 	script.write('$ns queue-limit $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') 10\n\n')
@@ -101,7 +101,7 @@ while compteur_flux < nb_flux:
 
 			segmentSize = np.int(taille_segment_tcp[0])
 
-			script.write('set null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/TCPSink]\n')
+			script.write('set null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/TCPSink/Sack1/DelAck]\n')
 			script.write('$ns attach-agent $n('+str(noeuds_traf_src[compteur_flux])+') $null('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
 			script.write('set tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+') [new Agent/TCP]\n')
 			script.write('$ns attach-agent $n('+str(noeuds_traf_dst[compteur_flux])+') $tcp('+str(noeuds_traf_src[compteur_flux])+'_'+str(noeuds_traf_dst[compteur_flux])+'_'+str(iterateur_sous_flux)+')\n')
