@@ -1,0 +1,20 @@
+Exercice 3
+-----------
+
+Question 1
+J'ai crée de nouvelles simulation avec les paramètres suivants:
+	1. DRR, implémentation Reno, DelAck
+		0-19
+		5-22
+	2. DRR, implémentation Tahoe, SackDelAck
+		18-22
+		0-19
+	3. RED, implémentation NewReno, Sack
+		0-19
+		5-22
+	4. RED, implémentation Vegas, Sack
+		0-19
+		5-22
+
+Question 2
+Les graphes suivants montrent pour chaque implémentation les 2 liens ayant le plus de pertes. On observe qu'en fonction de l'implémentation utilisée, ce ne sont pas les mêmes liens qui observent le plus de pertes.

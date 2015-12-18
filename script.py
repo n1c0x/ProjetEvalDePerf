@@ -81,7 +81,7 @@ script.write('\n\n')
 i = 0
 while i < nb_liens:
 	script.write('$ns duplex-link $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') '+str(capacite[i])+'Mb '+str(delai[i])+'ms DRR\n')
-	script.write('set file'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+' [open traces/'+str(noeuds_tries_orig[i])+'-'+str(noeuds_extr[i])+'.tr w]\n')
+	script.write('set file'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+' [open traces/'+str(noeuds_tries_orig[i])+'-'+str(noeuds_extr[i])+' w]\n')
 	script.write('$ns trace-queue $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') $file'+str(noeuds_tries_orig[i])+str(noeuds_extr[i])+'\n')
 	script.write('$ns queue-limit $n('+str(noeuds_tries_orig[i])+') $n('+str(noeuds_extr[i])+') 10\n\n')
 	i += 1

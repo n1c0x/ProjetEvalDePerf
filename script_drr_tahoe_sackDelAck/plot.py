@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 import os
 
 dossier_dest = 'traces'
+dossier_dest_graphe = 'graphes'
 liste_fichiers = os.listdir(dossier_dest)
 
 noeud_max_pertes = []
+res = open("result.res","w")
 
 for filename in liste_fichiers :
 
@@ -51,14 +53,15 @@ for filename in liste_fichiers :
 
 	src = filename.split('-')[0]
 	dst = filename.split('-')[1]
-	print('Du noeud '+src+' vers '+dst)
-	print(str(nb_paquets)+' Paquets traités')
-	print('----------------------------')
-	print('\tNombre de paquets perdus: '+str(len(nb_paquets_perdus)))
-	print('\tNombre de paquets reçus: '+str(len(nb_paquets_recus)))
-	print('\tNombre de paquets ajoutés: '+str(len(nb_paquets_ajoutes)))
-	print('\tNombre de paquets enlevés: '+str(len(nb_paquets_enleves)))
-	print('\n')
+	
+	res.write('Du noeud '+src+' vers '+dst+'\n')
+	res.write(str(nb_paquets)+' Paquets traités\n')
+	res.write('----------------------------\n')
+	res.write('\tNombre de paquets perdus: '+str(len(nb_paquets_perdus))+'\n')
+	res.write('\tNombre de paquets reçus: '+str(len(nb_paquets_recus))+'\n')
+	res.write('\tNombre de paquets ajoutés: '+str(len(nb_paquets_ajoutes))+'\n')
+	res.write('\tNombre de paquets enlevés: '+str(len(nb_paquets_enleves))+'\n')
+	res.write('\n')
 
 	pourcent_pertes = (len(nb_paquets_perdus)/nb_paquets)*100
 	noeud_max_pertes.append(pourcent_pertes)
@@ -72,10 +75,10 @@ for filename in liste_fichiers :
 	labels = [r'Paquets perdus '+str(pourcent_pertes.__round__(2))+'%',r'Paquets reçus '+str(pourcent_recus.__round__(2))+'%',r'Paquets ajoutés '+str(pourcent_ajoutes.__round__(2))+'%',r'Paquets enlevés '+str(pourcent_enleves.__round__(2))+'%']
 	sizes = [pourcent_pertes,pourcent_recus,pourcent_ajoutes,pourcent_enleves]
 	colors = ['yellowgreen', 'gold', 'lightskyblue', 'lightcoral']
-
+	
 	patches, texts = plt.pie(sizes, colors=colors, startangle=90)
 	plt.legend(patches, labels, loc="best")
 	plt.axis('equal')
 
-	plt.savefig(dossier_dest+'/'+filename+'.png')
+	plt.savefig(dossier_dest_graphe+'/'+filename+'.png')
 	plt.close()
