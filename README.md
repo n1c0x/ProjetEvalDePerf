@@ -1,5 +1,7 @@
 # Documentation
 
+Ce programme est dédié à des fin éducatives. Aucune réclamation et aucun support n'est apporté à ce programme.
+
 ## Utilisation des scripts
 #### Génération du script TCL
 Le script généré est nommé ```script.tcl```
